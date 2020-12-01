@@ -153,24 +153,25 @@ internal extension FTPFileProvider {
                     if let response = response, response.hasPrefix("23") {
                         task.startSecureConnection()
                         isSecure = true
-                        self.ftpEstablishSecureDataConnection(task) { error in
+                        
+                        self.ftpUserPass(task) { error in
                             if let error = error {
                                 completionHandler(error)
                                 return
                             }
                             
-                            self.ftpUserPass(task, completionHandler: completionHandler)
+                            self.ftpEstablishSecureDataConnection(task, completionHandler: completionHandler)
                         }
                     }
                 })
             } else if isSecure {
-                self.ftpEstablishSecureDataConnection(task) { error in
+                self.ftpUserPass(task) { error in
                     if let error = error {
                         completionHandler(error)
                         return
                     }
                     
-                    self.ftpUserPass(task, completionHandler: completionHandler)
+                    self.ftpEstablishSecureDataConnection(task, completionHandler: completionHandler)
                 }
             } else {
                 self.ftpUserPass(task, completionHandler: completionHandler)
